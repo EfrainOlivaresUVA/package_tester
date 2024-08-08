@@ -18,6 +18,11 @@ on:
         default: ""
         required: true
         type: string
+      branch-name:
+        description: "Name of branch for pip install"
+        default: "final_review"
+        required: true
+        type: string
   
 
 permissions:
@@ -40,9 +45,19 @@ jobs:
         GHANDLE: ${{ inputs.github-id }}
         VID: ${{ inputs.uuid }}
         PACKAGE: ${{ inputs.package-name }}
+        BRANCH: ${{ inputs.branch-name }}
       run: |
         python3 -m venv env; . env/bin/activate; pip install --upgrade pip
-        . env/bin/activate; pip install git+https://github.com/${GHANDLE}/${VID}_DS5111su24_lab_01@final_review
+        echo "\n======================================================================================"
+        echo "installing from git+https://github.com/${GHANDLE}/${VID}_DS5111su24_lab_01@${BRANCH}"
+        echo "======================================================================================"
+        . env/bin/activate; pip install git+https://github.com/${GHANDLE}/${VID}_DS5111su24_lab_01@${BRANCH}
+        echo "\n======================================================================================"
+        echo "PIP LIST"
+        echo "======================================================================================"
         . env/bin/activate; pip list
+        echo "\n======================================================================================"
+        echo "TEST IMPORT PACKAGE"
+        echo "======================================================================================"
         . env/bin/activate; python -c "import ${PACKAGE} as pkg; print(pkg.tokenize('To be or not to be'))"
 
